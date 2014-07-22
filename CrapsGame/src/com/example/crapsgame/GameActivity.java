@@ -2,21 +2,23 @@ package com.example.crapsgame;
 
 
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class GameActivity extends Activity {
+@SuppressLint("NewApi") public class GameActivity extends Activity {
 	
 	private static final String TAG = "BENNY_GAME_ACTIVITY";
 
@@ -31,7 +33,10 @@ public class GameActivity extends Activity {
 	private int player;
 	
 	private SharedPreferences top10Players;
+	private Handler handler;
 	
+	private LinearLayout playerGameSummaryLinearLayout;
+	private TextView playerSummaryTextView;
 	private TextView playerTotalGamesTextView;
 	private TextView playerHighestRollsTextView;
 	private TextView playerLowestRollsTextView;
@@ -48,13 +53,21 @@ public class GameActivity extends Activity {
 		playerHighestRollsTextView = (TextView)findViewById(R.id.playerHighestRollsTextView);
 		playerLowestRollsTextView = (TextView)findViewById(R.id.playerLowestRollsTextView);
 		playerWinsLossesTextView = (TextView)findViewById(R.id.playerWinsLossesTextView);
+		playerSummaryTextView = (TextView)findViewById(R.id.playerSummaryTextView);
+		
+		playerGameSummaryLinearLayout = (LinearLayout)findViewById(R.id.playerGameSummaryLinearLayout);
 		
 		playerNameEditText = (EditText)findViewById(R.id.playerNameEditText);
 		saveButton = (Button)findViewById(R.id.saveButton);
 		
 		top10Players = getSharedPreferences("players",MODE_PRIVATE);
 		
+		handler = new Handler();
+		
 		saveButton.setOnClickListener(savePlayerListener);
+		playerNameEditText.addTextChangedListener(playerNameTextWatcher);
+		
+		playerGameSummaryLinearLayout.setVisibility(4);
 		
 		loadSummary();
 	}
@@ -68,7 +81,7 @@ public class GameActivity extends Activity {
 			String playerTag = "Challenger" + player;
 			SharedPreferences.Editor preferencesEditor = top10Players.edit();
 			if(playerNameEditText.getText().length() <= 0)
-				Toast.makeText(GameActivity.this, "Please enter your name", Toast.LENGTH_SHORT);
+				Toast.makeText(GameActivity.this, "Please enter your name", Toast.LENGTH_SHORT).show();
 			else
 			{
 				String playerName = playerNameEditText.getText().toString();
@@ -77,9 +90,42 @@ public class GameActivity extends Activity {
 				preferencesEditor.putInt(playerTag+"Losses", losses);
 				preferencesEditor.putInt(playerTag+"Throws", totalThrows);
 				preferencesEditor.putInt(playerTag+"Games", totalGames);
+				preferencesEditor.apply();
+				Log.e(TAG, "****player saved****");
+				playerSummaryTextView.setText("Challenger " + playerName + " Summary:");
+				Toast.makeText(GameActivity.this, "Player saved successfully", Toast.LENGTH_SHORT).show();
+				handler.postDelayed(new Runnable(){
 
-
+					@Override
+					public void run() {
+						finish();
+					}
+					
+				}, 3000);
 			}
+			
+		}
+		
+	};
+	
+	private TextWatcher playerNameTextWatcher = new TextWatcher(){
+
+		@Override
+		public void afterTextChanged(Editable arg0) {
+			playerGameSummaryLinearLayout.setVisibility(0);
+		}
+
+		@Override
+		public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+				int arg3) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onTextChanged(CharSequence arg0, int arg1, int arg2,
+				int arg3) {
+			// TODO Auto-generated method stub
 			
 		}
 		

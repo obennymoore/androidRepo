@@ -11,7 +11,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -26,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -63,6 +63,7 @@ public class MainActivity extends Activity {
 	private TextView numOfRollsValueTextView;
 	private TextView numOfWinsValueTextView;
 	private TextView numOfLossesValueTextView;
+	private TextView playerNameTextView;
 	private RadioGroup dieSizeRadioGroup;
 	private RadioButton smallRadioButton;
 	private RadioButton largeRadioButton;
@@ -71,7 +72,6 @@ public class MainActivity extends Activity {
 	private Button startButton;
 	private LinearLayout crapsMainLinearLayout;
 	private TableLayout gameStatsTableLayout;
-
 	
 
     @Override
@@ -86,7 +86,6 @@ public class MainActivity extends Activity {
         handler = new Handler();
         previewAnimation = AnimationUtils.loadAnimation(this, R.anim.fade);
         shakeAnimation = AnimationUtils.loadAnimation(this, R.anim.shake);
-        top10Players = getSharedPreferences("players",MODE_PRIVATE);
         
         
         
@@ -99,6 +98,7 @@ public class MainActivity extends Activity {
         numOfRollsValueTextView = (TextView)findViewById(R.id.numOfRollsValueTextView);
         numOfWinsValueTextView = (TextView)findViewById(R.id.numOfWinsValueTextView);
         numOfLossesValueTextView = (TextView)findViewById(R.id.numOfLossesValueTextView);
+        playerNameTextView = (TextView)findViewById(R.id.playerNameTextView);
         dieSizeRadioGroup = (RadioGroup)findViewById(R.id.dieSizeRadioGroup);
         smallRadioButton = (RadioButton)findViewById(R.id.smallRadioButton);
         largeRadioButton = (RadioButton)findViewById(R.id.largeRadioButton);
@@ -112,6 +112,19 @@ public class MainActivity extends Activity {
         startButton.setOnClickListener(startOrRollListener);
         
         
+    }
+    
+    @Override protected void onResume()
+    {
+    	super.onResume();
+        top10Players = getSharedPreferences("players",MODE_PRIVATE);
+        String playerName = top10Players.getString("Challenger"+totalPlayers+"Name", "None");
+        if(playerName != "None")
+        {
+        	Log.e(TAG, "*****Player " + playerName + " retrieved*****");
+        	playerNameTextView.setText(playerName);
+			Toast.makeText(MainActivity.this, "Player " + playerName + " updated in game stats!", Toast.LENGTH_SHORT).show();
+        }
     }
     
     private OnClickListener startOrRollListener = new OnClickListener()
@@ -160,6 +173,7 @@ public class MainActivity extends Activity {
     
     private void loadDieImageFiles()
     {
+    	LinearLayout.LayoutParams imageViewLayoutParams;
     	try
         {
     		String[] imageFiles = getAssets().list(imagesFolderName);
@@ -176,6 +190,9 @@ public class MainActivity extends Activity {
         					diceImageList.add(filePath);
         			}
         		}
+        		imageViewLayoutParams = new LinearLayout.LayoutParams(60, 60);
+        		die1ImageView.setLayoutParams(imageViewLayoutParams);
+        		die2ImageView.setLayoutParams(imageViewLayoutParams);
         		previewDice();
         		break;
         		
@@ -190,6 +207,9 @@ public class MainActivity extends Activity {
         						diceImageList.add(filePath);
         				}
         			}
+        			imageViewLayoutParams = new LinearLayout.LayoutParams(100, 100);
+            		die1ImageView.setLayoutParams(imageViewLayoutParams);
+            		die2ImageView.setLayoutParams(imageViewLayoutParams);
         			previewDice();
         			break;
         		}
