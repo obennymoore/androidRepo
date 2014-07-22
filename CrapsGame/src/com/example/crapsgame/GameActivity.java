@@ -30,7 +30,9 @@ import android.widget.Toast;
 	private int losses;
 	private int totalThrows;
 	private int totalGames;
-	private int player;
+	private int totalPlayers;
+	
+	private String playerTag;
 	
 	private SharedPreferences top10Players;
 	private Handler handler;
@@ -78,7 +80,6 @@ import android.widget.Toast;
 		@Override
 		public void onClick(View arg0) {
 
-			String playerTag = "Challenger" + player;
 			SharedPreferences.Editor preferencesEditor = top10Players.edit();
 			if(playerNameEditText.getText().length() <= 0)
 				Toast.makeText(GameActivity.this, "Please enter your name", Toast.LENGTH_SHORT).show();
@@ -90,6 +91,7 @@ import android.widget.Toast;
 				preferencesEditor.putInt(playerTag+"Losses", losses);
 				preferencesEditor.putInt(playerTag+"Throws", totalThrows);
 				preferencesEditor.putInt(playerTag+"Games", totalGames);
+				preferencesEditor.putInt("totalPlayers", totalPlayers);
 				preferencesEditor.apply();
 				Log.e(TAG, "****player saved****");
 				playerSummaryTextView.setText("Challenger " + playerName + " Summary:");
@@ -138,7 +140,8 @@ import android.widget.Toast;
 		losses = getIntent().getIntExtra("losses", -1);
 		totalGames = getIntent().getIntExtra("game_number", -1);
 		totalThrows = getIntent().getIntExtra("throws", -1);
-		player = getIntent().getIntExtra("players", -1);
+		totalPlayers = getIntent().getIntExtra("players", -1);
+		playerTag = getIntent().getStringExtra("player");
 		
 		Log.e(TAG, "***loaded " + wins + " wins, " + losses + "losses, " + totalGames + "games in total and " + totalThrows + " throws");
 				

@@ -12,6 +12,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -47,6 +48,7 @@ public class MainActivity extends Activity {
 	private Boolean gameOver;
 	private String gameStatus;
 	private String imagesFolderName;
+	private String playerTag;
 	private Random random;
 	private Handler handler;
 	private Animation previewAnimation;
@@ -85,6 +87,7 @@ public class MainActivity extends Activity {
         handler = new Handler();
         previewAnimation = AnimationUtils.loadAnimation(this, R.anim.fade);
         shakeAnimation = AnimationUtils.loadAnimation(this, R.anim.shake);
+        top10Players = getSharedPreferences("players",MODE_PRIVATE);
         
         
         
@@ -117,13 +120,34 @@ public class MainActivity extends Activity {
     {
     	super.onResume();
         top10Players = getSharedPreferences("players",MODE_PRIVATE);
-        String playerName = top10Players.getString("Challenger"+totalPlayers+"Name", "None");
-        if(playerName != "None")
+        totalPlayers = top10Players.getInt("totalPlayers", 0);
+        if(totalPlayers != 0)
+        {
+        	Log.e(TAG, "***created " + playerTag + " tag***");
+        	playerTag = "Challenger" + totalPlayers;
+        }
+  
+        String playerName = top10Players.getString(playerTag+"Name", null);
+        int games = top10Players.getInt(playerTag+"Games", -1);
+        int wins = top10Players.getInt(playerTag+"Wins", -1);
+        int losses = top10Players.getInt(playerTag+"Losses", -1);
+        int totalThrows = top10Players.getInt(playerTag+"Throws", -1);
+  
+        if(playerName != null)
         {
         	Log.e(TAG, "*****Player " + playerName + " retrieved*****");
+        	
         	playerNameTextView.setText(playerName);
-			Toast.makeText(MainActivity.this, "Player " + playerName + " updated in game stats!", Toast.LENGTH_SHORT).show();
+        	playerNameTextView.setTextColor(getResources().getColor(R.color.hint));
+        	numOfGamesValueTextView.setText(""+games);
+        	numOfRollsValueTextView.setText(""+totalThrows);
+        	numOfWinsValueTextView.setText(""+wins);
+        	numOfLossesValueTextView.setText(""+losses);
+        	playerNameTextView.setTypeface(null, Typeface.BOLD);
+         	
+        	Toast.makeText(MainActivity.this, "Most recent player, " + playerName + ", updated in game stats!", Toast.LENGTH_SHORT).show();
         }
+        
     }
     
     private OnClickListener startOrRollListener = new OnClickListener()
@@ -479,6 +503,7 @@ public class MainActivity extends Activity {
     	rollValueTextView.setText("");
     	rollPointTextView.setText("");
     	gameStatusTextView.setText("");
+    	playerNameTextView.setText("");
     }
     
     private void startGame()
@@ -578,7 +603,14 @@ public class MainActivity extends Activity {
 						savePlayer();
 					}
 				});
-    	builder.setNegativeButton(R.string.no, null);
+    	builder.setNegativeButton(R.string.no, 
+    			new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						resetGame();
+					}
+				});
     	AlertDialog saveDialog = builder.create();
     	saveDialog.show();
     	
@@ -586,6 +618,7 @@ public class MainActivity extends Activity {
     
     private void savePlayer()
     {
+    	playerTag = "Challenger" + totalPlayers;
     	Log.e(TAG, "*****SAVE PLAYER*****");
     	Intent getPlayerName = new Intent(MainActivity.this,GameActivity.class);
     	getPlayerName.putExtra("wins", wins);
@@ -593,6 +626,7 @@ public class MainActivity extends Activity {
     	getPlayerName.putExtra("game_number", gameNumber);
     	getPlayerName.putExtra("throws", totalThrows);
     	getPlayerName.putExtra("players", totalPlayers);
+    	getPlayerName.putExtra("player", playerTag);
     	startActivity(getPlayerName);
     }
 }
