@@ -52,7 +52,6 @@ public class MainActivity extends Activity {
 	private Animation previewAnimation;
 	private Animation shakeAnimation;
 	private SharedPreferences top10Players;
-	private SharedPreferences.Editor playersEditor;
 	
 	private TextView titleTextView;
 	private TextView selectTextView;
