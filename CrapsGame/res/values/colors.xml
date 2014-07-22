@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <color name="text_color">#738678</color>
+    <color name="background_color">#808000</color>
+    <color name= "win">#008000</color>
+    <color name= "lose">#FF0800</color>
+    <color name="cont">#FFF700</color>
+    <color name="hint">#ACE1AF</color>
+    
+</resources>

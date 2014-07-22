@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <dimen name="begin_title_size">28sp</dimen>
+    <dimen name="result_size">35sp</dimen>
+    <dimen name="point_size">60sp</dimen>
+    <dimen name="status_size">15sp</dimen>
+    <dimen name="text_size">18sp</dimen>
+    
+</resources>
