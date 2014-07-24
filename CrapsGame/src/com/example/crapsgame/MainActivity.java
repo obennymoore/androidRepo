@@ -1,3 +1,26 @@
+/************************************************************************
+ * 																		*
+ * NAME: OCHUKO BENEMOH													*
+ * COURSE: CPD 4493(MOBILE DEV II)										*
+ * 																		*
+ * =================FIRST PROJECT================						*
+ *																		*
+ * NAME: CRAPS GAME APP (EX. 6.12 ANDROID HTP 1ST ED.)					*
+ * DESCRIPTION:															*
+ *	- An app that simulates the dice game of craps						*
+ *	- A player rolls two dice; each die has 6 faces(images provided)	*
+ *	- Each face comes in small and large die sizes.						*
+ *	- After the dice have come to rest, the sum of the top faces is		*
+ *	  calculated.														*
+ *	- If the sum is:													*
+ *	  - 7 or 11 on the first throw, player wins							*
+ *	  - 2, 3 or 12 on the first throw(called "craps"), player loses		*
+ *	  - 4, 5, 6 , 8, 9, 10 on the first throw, player's "point" = sum	*
+ *	- To win, player must continue rolling until point value is rolled	*
+ *	- Player loses by rolling a 7 before rolling point value			*			
+ *																		*
+ ************************************************************************/
+
 package com.example.crapsgame;
 
 import java.io.IOException;
@@ -35,9 +58,9 @@ public class MainActivity extends Activity {
 	
 	private static final String TAG = "BENNY_ACTIVITY";
 	
-	private List<String>diceImageList;
-	private int rollSum;
-	private int die1RollPoint;
+	private List<String>diceImageList;	
+	private int rollSum;						
+	private int die1RollPoint;	
 	private int die2RollPoint;
 	private int gameRollPoint;
 	private int gameNumber;
@@ -456,6 +479,7 @@ public class MainActivity extends Activity {
 							gameStatsTableLayout.setBackgroundColor(getResources().getColor(R.color.lose));
 							++losses;
 							numOfLossesValueTextView.setText(""+losses);
+							Toast.makeText(MainActivity.this, "CRAPS!!!", Toast.LENGTH_SHORT).show();
 							break;
 				    	case "roll":
 				    		gameStatusTextView.setTextColor(getResources().getColor(R.color.cont));

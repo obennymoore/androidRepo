@@ -22,10 +22,6 @@ import android.widget.Toast;
 	
 	private static final String TAG = "BENNY_GAME_ACTIVITY";
 
-	//private ArrayList<String>fileNameList = getIntent().getExtras().getStringArrayList("filenames");
-	//String dieSize = getIntent().getExtras().getString("die_size");
-	
-	//CharSequence dieSize = getIntent().getExtras().getCharSequence(Intent.EXTRA_TEXT);
 	private int wins;
 	private int losses;
 	private int totalThrows;
